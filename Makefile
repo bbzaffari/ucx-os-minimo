@@ -109,10 +109,10 @@ endif
 	hexdump -v -e '4/1 "%02x" "\n"' $(BUILD_TARGET_DIR)/image.bin > $(BUILD_TARGET_DIR)/code.txt
 
 ## applications
-ECB: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_ECB.o app/tdes_driver/app_ECB.c
-	@$(MAKE) --no-print-directory link
+# ECB: rebuild
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_ECB.o app/tdes_driver/app_ECB.c
+# 	@$(MAKE) --no-print-directory link
 	
 # CTR: rebuild
 # 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
@@ -124,6 +124,12 @@ ECB: rebuild
 # 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_CBC.o app/tdes_driver/app_CBC.c
 # 	@$(MAKE) --no-print-directory link	
 
+APP_MODE ?= ECB
+
+build-app:
+	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
+	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_$(APP_MODE).o app/tdes_driver/app_$(APP_MODE).c
+	@$(MAKE) --no-print-directory link
 
 
 # clean and rebuild rules

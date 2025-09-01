@@ -74,7 +74,7 @@ message.o: $(SRC_DIR)/kernel/message.c
 timer.o: $(SRC_DIR)/kernel/timer.c
 	$(CC) $(CFLAGS) $(SRC_DIR)/kernel/timer.c
 
-libs: console.o libc.o fixed.o dump.o malloc.o list.o queue.o
+libs: console.o libc.o dump.o malloc.o list.o queue.o
 
 queue.o: $(SRC_DIR)/lib/queue.c
 	$(CC) $(CFLAGS) $(SRC_DIR)/lib/queue.c
@@ -84,8 +84,6 @@ malloc.o: $(SRC_DIR)/lib/malloc.c
 	$(CC) $(CFLAGS) $(SRC_DIR)/lib/malloc.c
 dump.o: $(SRC_DIR)/lib/dump.c
 	$(CC) $(CFLAGS) $(SRC_DIR)/lib/dump.c
-fixed.o:$(SRC_DIR)/lib/fixed.c
-	$(CC) $(CFLAGS) $(SRC_DIR)/lib/fixed.c
 libc.o: $(SRC_DIR)/lib/libc.c
 	$(CC) $(CFLAGS) $(SRC_DIR)/lib/libc.c
 console.o: $(SRC_DIR)/lib/console.c
@@ -111,174 +109,22 @@ endif
 	hexdump -v -e '4/1 "%02x" "\n"' $(BUILD_TARGET_DIR)/image.bin > $(BUILD_TARGET_DIR)/code.txt
 
 ## applications
-coroutine_args: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/coroutine_args.o app/coroutine_args.c
+ECB: rebuild
+	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
+	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_ECB.o app/tdes_driver/app_ECB.c
 	@$(MAKE) --no-print-directory link
 	
-coroutine_mq: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/coroutine_mq.o app/coroutine_mq.c
-	@$(MAKE) --no-print-directory link
+# CTR: rebuild
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_CTR.o app/tdes_driver/app_CTR.c
+# 	@$(MAKE) --no-print-directory link
 
-coroutine_pipe: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/coroutine_pipe.o app/coroutine_pipe.c
-	@$(MAKE) --no-print-directory link
+# CBC: rebuild
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/tdes_driver.o app/tdes_driver/tdes_driver.c
+# 	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app_CBC.o app/tdes_driver/app_CBC.c
+# 	@$(MAKE) --no-print-directory link	
 
-coroutine_task: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/coroutine_task.o app/coroutine_task.c
-	@$(MAKE) --no-print-directory link
 
-delay: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/delay.o app/delay.c
-	@$(MAKE) --no-print-directory link
-
-driver: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/driver.o app/driver/driver.c
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/app.o app/driver/app.c
-	@$(MAKE) --no-print-directory link
-
-echo: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/echo.o app/echo.c
-	@$(MAKE) --no-print-directory link
-
-gpio_blink: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/gpio_blink.o app/gpio_blink.c
-	@$(MAKE) --no-print-directory link
-
-gpio_blinkseq: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/gpio_blinkseq.o app/gpio_blinkseq.c
-	@$(MAKE) --no-print-directory link
-
-gpio_blinkseqkey: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/gpio_blinkseqkey.o app/gpio_blinkseqkey.c
-	@$(MAKE) --no-print-directory link
-	
-gpio_int: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/gpio_int.o app/gpio_int.c
-	@$(MAKE) --no-print-directory link
-
-hello: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/hello.o app/hello.c
-	@$(MAKE) --no-print-directory link
-
-hello_p: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/hello_preempt.o app/hello_preempt.c
-	@$(MAKE) --no-print-directory link
-
-i2c_eeprom: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/i2c_eeprom.o app/i2c_eeprom.c
-	@$(MAKE) --no-print-directory link
-	
-i2c_master: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/i2c_master.o app/i2c_master.c
-	@$(MAKE) --no-print-directory link
-	
-i2c_simple: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/i2c_simple.o app/i2c_simple.c
-	@$(MAKE) --no-print-directory link
-	
-messages: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/messages.o app/messages.c
-	@$(MAKE) --no-print-directory link
-
-messages_alloc: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/messages_alloc.o app/messages_alloc.c
-	@$(MAKE) --no-print-directory link
-
-messages_simple: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/messages_simple.o app/messages_simple.c
-	@$(MAKE) --no-print-directory link
-	
-mutex: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/mutex.o app/mutex.c
-	@$(MAKE) --no-print-directory link
-	
-pipes: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/pipes.o app/pipes.c
-	@$(MAKE) --no-print-directory link
-
-pipes_s: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/pipes_small.o app/pipes_small.c
-	@$(MAKE) --no-print-directory link
-
-pipes_struct: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/pipes_struct.o app/pipes_struct.c
-	@$(MAKE) --no-print-directory link
-
-prodcons: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/prodcons.o app/prodcons.c
-	@$(MAKE) --no-print-directory link
-
-progress: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/progress.o app/progress.c
-	@$(MAKE) --no-print-directory link
-
-pwm_blink: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/pwm_blink.o app/pwm_blink.c
-	@$(MAKE) --no-print-directory link
-	
-rtsched: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/rtsched.o app/rtsched.c
-	@$(MAKE) --no-print-directory link
-
-spi_master: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/spi_master.o app/spi_master.c
-	@$(MAKE) --no-print-directory link
-	
-spi_slave: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/spi_slave.o app/spi_slave.c
-	@$(MAKE) --no-print-directory link
-	
-spi_periph: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/spi_periph.o app/spi_periph.c
-	@$(MAKE) --no-print-directory link
-	
-spi_eeprom: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/spi_eeprom.o app/spi_eeprom.c
-	@$(MAKE) --no-print-directory link
-	
-suspend: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/suspend.o app/suspend.c
-	@$(MAKE) --no-print-directory link
-
-test64: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/test64.o app/test64.c
-	@$(MAKE) --no-print-directory link
-
-test_fixed: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/test_fixed.o app/test_fixed.c
-	@$(MAKE) --no-print-directory link
-	
-test_fp: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/test_fp.o app/test_fp.c
-	@$(MAKE) --no-print-directory link
-
-timer: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/timer.o app/timer.c
-	@$(MAKE) --no-print-directory link
-	
-timer_systick: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/timer_systick.o app/timer_systick.c
-	@$(MAKE) --no-print-directory link
-
-timer_uptime: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/timer_uptime.o app/timer_uptime.c
-	@$(MAKE) --no-print-directory link
-
-timer_kill: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/timer_kill.o app/timer_kill.c
-	@$(MAKE) --no-print-directory link
-
-scall_suspend: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/scall_suspend.o app/scall_suspend.c
-	@$(MAKE) --no-print-directory link
-	
-vt100_term: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/vt100_term.o app/vt100_term.c
-	@$(MAKE) --no-print-directory link
-	
-vt100_term_ioctl: rebuild
-	$(CC) $(CFLAGS) -o $(BUILD_APP_DIR)/vt100_term_ioctl.o app/vt100_term_ioctl.c
-	@$(MAKE) --no-print-directory link
 
 # clean and rebuild rules
 rebuild:

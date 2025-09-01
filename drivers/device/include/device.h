@@ -5,11 +5,11 @@ enum seek_pos {SEEK_SET, SEEK_CUR, SEEK_END};
 
 /* device data structure */
 struct device_s {
-	const char *name;
-	const void *config;
+	char *name;
+	void *config;
 	void *data;
-	const struct device_api_s *api;
-	const void *custom_api;
+	struct device_api_s *api;
+	void *custom_api;
 };
 
 /* generic driver API */

@@ -82,7 +82,7 @@ count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
 ````
 
 ## Operating Modes:
-
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
 Encryption has been implemented for ECB, CBC, and CTR modes. 
 
 ### Electronic Codebook `mode` simply processes isolated blocks with dec/enc_block():
@@ -132,7 +132,7 @@ else if (pconfig->mode == CBC) {
 ````
 
 ## Dynamic Allocation and Output Buffer:
-
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
 Buffer allocation was done dynamically with malloc and released at the end of the
 process:
 
@@ -155,8 +155,8 @@ later
 ## Final Validation:
 
 The driver was tested with the phrase "the quick brown fox jumps over the lazy dog" and correctly validated the blocks and applied padding. The entire encryption and decryption process proved to be functional.
+[app/tdes_driver/app_{ECB, CTR, CBC}.c]()
 
-app_{ECB, CTR, CBC}.c
 ```c
     printf("--------------------------------- FIM ---------------------------------\n");
 

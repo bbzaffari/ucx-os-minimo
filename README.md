@@ -118,13 +118,13 @@ else if (pconfig->mode == CTR) {
 ### Cipher Block Chaining `mode` uses IV and XOR between blocks:	
 ```c
 else if (pconfig->mode == CBC) {
-            if (pconfig->type == ENCRYPT) { // ENCRYPT
-               
-                block[0] ^= pconfig->iv[0];
-                block[1] ^= pconfig->iv[1];
-                enc_block(block);           
-                pconfig->iv[0] = block[0];             
-                pconfig->iv[1] = block[1];
+if (pconfig->type == ENCRYPT) { // ENCRYPT
+   
+    block[0] ^= pconfig->iv[0];
+    block[1] ^= pconfig->iv[1];
+    enc_block(block);           
+    pconfig->iv[0] = block[0];             
+    pconfig->iv[1] = block[1];
 } else { // DECRYPT
     uint32_t next_iv[2] = {block[0], block[1]};  
     dec_block(block);               

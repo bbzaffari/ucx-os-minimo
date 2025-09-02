@@ -67,7 +67,7 @@ static uint16_t tarefa_que_chamou = NO_TASK;
 ```
 
 ```c
-/// state indicates whether it is being used by any process. It could be atomic or a mutex with condvar
+/// state indicates whether it is being used by any process. Ideally, It could be atomic or a mutex with condvar(but since it was not the scope of the work it was not presented)
 e_STATE state = OFF;
 ````
 
@@ -82,7 +82,7 @@ including calculating PKCS#7 padding when the text size is not a multiple of 8:
 
 ```c
 remainder = count % BLOCKLEN_BYTES;
-count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
+count_padding = (remainder > 0) ? BLOCKLEN_BYTES - remainder : 0;
 ````
 
 ## Operating Modes:

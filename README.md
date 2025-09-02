@@ -51,7 +51,7 @@ Exclusive driver use control per task has been implemented using ucx_task_id() a
 ```c
 #define NO_TASK 0xFFFF
 static uint16_t tarefa_que_chamou = NO_TASK;
-
+```
 
 ```c
 /// state indicates whether it is being used by any process. It could be atomic or a mutex with condvar

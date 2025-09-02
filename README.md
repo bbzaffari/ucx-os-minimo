@@ -1,3 +1,169 @@
+## Abstract:
+The work consisted of implementing a device driver for a Triple DES (3DES) encryption module in the UCX/OS system, running on the HFRISC-E processor. The main objective was to allow system tasks to perform encryption and decryption operations using simple high-level instructions such as write() and read().
+
+## Data structures created:
+```c
+tdes_driver.h
+#ifndef TDES_DRIVER_H
+#define TDES_DRIVER_H
+
+/* user data */
+typedef enum { // SELECIONANDO O TIPO
+    DECRYPT = 27,
+    ENCRYPT = 54
+}e_TYPE;
+
+typedef enum { 
+    ON,
+    OFF, 
+    IDLE
+}e_STATE;
+
+typedef enum { // SELECIONANDO O MODO
+    ECB = 20,
+    CBC = 40,
+    CTR = 60
+}e_MODE;
+
+typedef struct {
+    const uint32_t KEY[6];
+    e_TYPE  type;
+    e_MODE  mode;
+    uint32_t iv[2];
+} s_CONFIG_tDES;
+
+typedef struct {
+    uint8_t *BUFFER; // INPUT no driver TDES
+    size_t size;
+} s_DATA_tDES;
+
+extern struct device_api_s dev_tdes;
+
+
+#endif
+````
+
+## Access and State Control:
+
+tdes_driver.c
+
+Exclusive driver use control per task has been implemented using ucx_task_id() and a global state.
+```c
+#define NO_TASK 0xFFFF
+static uint16_t tarefa_que_chamou = NO_TASK;
+
+
+```c
+/// state indicates whether it is being used by any process. It could be atomic or a mutex with condvar
+e_STATE state = OFF;
+````
+
+This control prevents more than one task from using the driver simultaneously and ensures that only the task that opened the driver can use it.
+
+## Data Handling and Padding:
+
+The tdes_write() function receives the task data and performs preprocessing,
+including calculating PKCS#7 padding when the text size is not a multiple of 8:
+
+```c
+residue = count % BLOCKLEN_BYTES;
+count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
+````
+## Operating Modes:
+
+Encryption has been implemented for ECB, CBC, and CTR modes. 
+
+### Electronic Codebook mode simply processes isolated blocks with dec/enc_block():
+```c
+if (pconfig->mode == ECB) {
+      if(pconfig->type == ENCRYPT)
+          enc_block(block);
+      else 
+          dec_block(block);
+} 
+````
+
+### Counter Mode mode generates a keystream with IV increment:
+```c
+else if (pconfig->mode == CTR) {
+          keystream[0] = pconfig->iv[0];
+          keystream[1] = pconfig->iv[1];
+          /// Gera keystream cifrando o IV
+          enc_block(keystream);
+          block[0] ^= keystream[0];/// XOR do bloco de entrada com o keystream
+          block[1] ^= keystream[1];/// XOR do bloco de entrada com o keystream
+          /// Incrementa o contador
+          pconfig->iv[1]++;
+          if (pconfig->iv[1] == 0) pconfig->iv[0]++;
+}
+````
+
+### Cipher Block Chaining mode uses IV and XOR between blocks:	
+```c
+else if (pconfig->mode == CBC) {
+            if (pconfig->type == ENCRYPT) { // ENCRYPT
+               
+                block[0] ^= pconfig->iv[0];
+                block[1] ^= pconfig->iv[1];
+                enc_block(block);           
+                pconfig->iv[0] = block[0];             
+                pconfig->iv[1] = block[1];
+} else { // DECRYPT
+    uint32_t next_iv[2] = {block[0], block[1]};  
+    dec_block(block);               
+    block[0] ^= pconfig->iv[0];       
+    block[1] ^= pconfig->iv[1];
+    pconfig->iv[0] = next_iv[0];   
+    pconfig->iv[1] = next_iv[1];
+  }
+} 
+````
+
+## Dynamic Allocation and Output Buffer:
+
+Buffer allocation was done dynamically with malloc and released at the end of the
+process:
+
+```c
+    pconfig->iv[0] = temp_IV[0];
+    pconfig->iv[1] = temp_IV[1];
+    //hex_dump_uint8(out_buf, count_total);// DEGUG
+    memcpy(pdata->BUFFER, out_buf, count_total);
+    free(in_buf);
+    free(out_buf);
+    
+    NOSCHED_LEAVE();
+    return count_total;
+}
+````
+
+The output is copied to the device's buffer to be retrieved via read()
+later
+
+## Final Validation:
+
+The driver was tested with the phrase "the quick brown fox jumps over the lazy dog" and correctly validated the blocks and applied padding. The entire encryption and decryption process proved to be functional.
+
+app_{ECB, CTR, CBC}.c
+```c
+    printf("--------------------------------- FIM ---------------------------------\n");
+
+    if (memcmp(plain_text, texto_retorno_leg, strlen(plain_text)) == 0) {
+        printf("[VERIFICACAO]: PASSOU Texto decifrado BATE com o original.\n");
+    } else {
+        printf("[VERIFICACAO]: Texto decifrado nao confere com o original.\n");
+    }
+
+    free(texto_cifrado);
+    free(texto_retorno_leg);
+    _delay_us(3);
+    // FECHANDO --------------------------------------
+    dev_close(&dev);
+    // FECHANDO --------------------------------------
+}
+````
+
+---
 # UCX/OS - Microcontroller Executive / OS
 
 UCX/OS is an experimental preemptive nanokernel for microcontrollers, aimed to be easily ported. The kernel implements a lightweight multitasking environment in a single address space (based on tasks and coroutines), using a minimum amount of resources.

@@ -67,9 +67,10 @@ The tdes_write() function receives the task data and performs preprocessing,
 including calculating PKCS#7 padding when the text size is not a multiple of 8:
 
 ```c
-residue = count % BLOCKLEN_BYTES;
+remainder = count % BLOCKLEN_BYTES;
 count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
 ````
+
 ## Operating Modes:
 
 Encryption has been implemented for ECB, CBC, and CTR modes. 

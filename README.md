@@ -1,5 +1,3 @@
----
-
 # **Implementation Details and MMIO Access in the uKernel-OS**
 
 *This design adheres to the MMIO ***(Memory-Mapped I/O)*** architecture, in which the operating system `(here, UCX/OS)` directly accesses hardware by reading from and writing to specific memory locations through [**volatile uint32_t***]() pointers.*

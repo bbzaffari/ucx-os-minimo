@@ -75,7 +75,7 @@ count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
 
 Encryption has been implemented for ECB, CBC, and CTR modes. 
 
-### Electronic Codebook mode simply processes isolated blocks with dec/enc_block():
+### Electronic Codebook `mode` simply processes isolated blocks with dec/enc_block():
 ```c
 if (pconfig->mode == ECB) {
       if(pconfig->type == ENCRYPT)
@@ -85,7 +85,7 @@ if (pconfig->mode == ECB) {
 } 
 ````
 
-### Counter Mode mode generates a keystream with IV increment:
+### Counter `mode` generates a keystream with IV increment:
 ```c
 else if (pconfig->mode == CTR) {
           keystream[0] = pconfig->iv[0];
@@ -100,7 +100,7 @@ else if (pconfig->mode == CTR) {
 }
 ````
 
-### Cipher Block Chaining mode uses IV and XOR between blocks:	
+### Cipher Block Chaining `mode` uses IV and XOR between blocks:	
 ```c
 else if (pconfig->mode == CBC) {
             if (pconfig->type == ENCRYPT) { // ENCRYPT

@@ -13,7 +13,8 @@ The work consisted of implementing a device driver for a Triple DES (3DES) encry
 5. [Final Validation](#final-validation)
 
 ## Data structures created:
-[app/tdes_driver/tdes_driver.h](/app/tdes_driver/tdes_driver.h)
+
+[app/tdes_driver/tdes_driver.h](/app/tdes_driver/tdes_driver.h) \
 
 ```c
 #ifndef TDES_DRIVER_H
@@ -57,7 +58,7 @@ extern struct device_api_s dev_tdes;
 
 ## Access and State Control:
 
-[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c) \
 
 Exclusive driver use control per task has been implemented using ucx_task_id() and a global state.
 ```c
@@ -74,7 +75,7 @@ This control prevents more than one task from using the driver simultaneously an
 
 ## Data Handling and Padding:
 
-[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c) \
 
 The tdes_write() function receives the task data and performs preprocessing,
 including calculating PKCS#7 padding when the text size is not a multiple of 8:
@@ -85,7 +86,7 @@ count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
 ````
 
 ## Operating Modes:
-[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c) \
 
 Encryption has been implemented for ECB, CBC, and CTR modes. 
 
@@ -137,7 +138,7 @@ else if (pconfig->mode == CBC) {
 
 ## Dynamic Allocation and Output Buffer:
 
-[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+[app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c) \
 
 Buffer allocation was done dynamically with malloc and released at the end of the
 process:

@@ -1,6 +1,14 @@
 # **Implementation Details and MMIO Access in the uKernel-OS**
+
 ## Abstract:
 The work consisted of implementing a device driver for a Triple DES (3DES) encryption module in the UCX/OS system, running on the HFRISC-E processor. The main objective was to allow system tasks to perform encryption and decryption operations using simple high-level instructions such as write() and read().
+
+1. [Data Structures Created](#data-structures-created)
+2. [Access and State Control](#access-and-state-control)
+3. [Data Handling and Padding](#data-handling-and-padding)
+4. [Operating Modes](#operating-modes)
+5. [Dynamic Allocation and Output Buffer](#dynamic-allocation-and-output-buffer)
+5. [Final Validation](#final-validation)
 
 ## Data structures created:
 [app/tdes_driver/tdes_driver.h](/app/tdes_driver/tdes_driver.h)

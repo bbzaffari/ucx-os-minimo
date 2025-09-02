@@ -14,6 +14,7 @@ The work consisted of implementing a device driver for a Triple DES (3DES) encry
 
 ## Data structures created:
 [app/tdes_driver/tdes_driver.h](/app/tdes_driver/tdes_driver.h)
+
 ```c
 #ifndef TDES_DRIVER_H
 #define TDES_DRIVER_H
@@ -85,6 +86,7 @@ count_padding = (residue > 0) ? BLOCKLEN_BYTES - remainder : 0;
 
 ## Operating Modes:
 [app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+
 Encryption has been implemented for ECB, CBC, and CTR modes. 
 
 ### Electronic Codebook `mode` simply processes isolated blocks with dec/enc_block():
@@ -134,7 +136,9 @@ else if (pconfig->mode == CBC) {
 ````
 
 ## Dynamic Allocation and Output Buffer:
+
 [app/tdes_driver/tdes_driver.c](/app/tdes_driver/tdes_driver.c)
+
 Buffer allocation was done dynamically with malloc and released at the end of the
 process:
 
@@ -160,10 +164,10 @@ The driver was tested with the phrase "the quick brown fox jumps over the lazy d
 [app/tdes_driver/app_{ECB, CTR, CBC}.c]()
 
 ```c
-    printf("--------------------------------- FIM ---------------------------------\n");
+    printf("--------------------------------- END ---------------------------------\n");
 
     if (memcmp(plain_text, texto_retorno_leg, strlen(plain_text)) == 0) {
-        printf("[VERIFICACAO]: PASSOU Texto decifrado BATE com o original.\n");
+        printf("[VERIFICATION]: PASSED Decrypted text MATCHES original.\n");
     } else {
         printf("[VERIFICACAO]: Texto decifrado nao confere com o original.\n");
     }
@@ -171,9 +175,9 @@ The driver was tested with the phrase "the quick brown fox jumps over the lazy d
     free(texto_cifrado);
     free(texto_retorno_leg);
     _delay_us(3);
-    // FECHANDO --------------------------------------
+    // CLOSING --------------------------------------
     dev_close(&dev);
-    // FECHANDO --------------------------------------
+    // CLOSING --------------------------------------
 }
 ````
 

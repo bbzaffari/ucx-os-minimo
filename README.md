@@ -1,6 +1,6 @@
 # **Implementation Details and MMIO Access in the uKernel-OS**
 
-*This design adheres to the MMIO (Memory-Mapped I/O) architecture, in which the operating system `(here, UCX/OS)` directly accesses hardware by reading from and writing to specific memory locations through [**volatile uint32_t***]() pointers.*
+*This design adheres to the MMIO ***(Memory-Mapped I/O)*** architecture, in which the operating system `(here, UCX/OS)` directly accesses hardware by reading from and writing to specific memory locations through [**volatile uint32_t***]() pointers.*
 
 ## Abstract:
 The work consisted of implementing a device driver for a Triple DES (3DES) encryption module in the UCX/OS system, running on the HFRISC-E processor. The main objective was to allow system tasks to perform encryption and decryption operations using simple high-level instructions such as write() and read().

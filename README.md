@@ -46,7 +46,7 @@ extern struct device_api_s dev_tdes;
 
 ## Access and State Control:
 
-tdes_driver.c
+(app/tdes_driver/tdes_driver.c)[app/tdes_driver/tdes_driver.c]
 
 Exclusive driver use control per task has been implemented using ucx_task_id() and a global state.
 ```c
